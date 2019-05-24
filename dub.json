@@ -1,0 +1,9 @@
+{
+	"authors": [
+		"uiman"
+	],
+	"copyright": "Copyright © 2019, uiman",
+	"description": "A minimal D application.",
+	"license": "proprietary",
+	"name": "uim-vue"
+}
