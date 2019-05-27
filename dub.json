@@ -1,9 +1,26 @@
 {
-	"authors": [
-		"uiman"
+	"name": "uim-vue",
+	"authors": [ "UI Manufaktur" ],
+	"description": "D library for working with vue",
+	"copyright": "Copyright © 2019, UI Manufaktur UG",
+	"license": "Apache 2.0",
+	"targetName": "uimvue",
+    "targetType": "library",
+	"dependencies": {
+		"vibe-d:web": "==0.8.5"
+		"uim-core": "~>master",
+		"uim-oop": "~>master"
+	},
+	"sourcePaths": [
+		"../web",
+		"../html",
+		"../js",
+		"./"
 	],
-	"copyright": "Copyright © 2019, uiman",
-	"description": "A minimal D application.",
-	"license": "proprietary",
-	"name": "uim-vue"
+	"importPaths": [
+		"../web",
+		"../html",
+		"../js",
+		"./"
+	]
 }
