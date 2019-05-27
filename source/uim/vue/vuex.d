@@ -6,8 +6,13 @@ class DVuex {
 	this() {}
 	this(string name) { this(); _name = name; }
 
-	mixin(TProperty!("string", "name"));
-	mixin(TPropertyAA!("string", "string", "state"));
+	@private string[string] _name;
+	@property O name(this O)(string[string] newName) { _name = newName; return cast(O)this; }
+	@property string[string] name() { return _name; }
+
+	@private string[string] _state;
+	@property O state(this O)(string[string] newState) { _state = newState; return cast(O)this; }
+	@property string[string] state() { return _state; }
 	O state(this O)(string name, int value) { return this.state(name, to!string(value)); } 
 	O state(this O)(string name, Json value) { return this.state(name, value.toString); } 
 	O state(this O)(string name, string[] values) {
@@ -19,10 +24,21 @@ class DVuex {
 		return this.state(name, results); 
 	} 
 
-	mixin(TPropertyAA!("string", "string", "getters"));
-	mixin(TPropertyAA!("string", "string", "mutations"));
-	mixin(TPropertyAA!("string", "string", "actions"));
-	mixin(TPropertyAA!("string", "string", "modules"));
+	@private string[string] _getters;
+	@property O getters(this O)(string[string] newGetters) { _getters = newGetters; return cast(O)this; }
+	@property string[string] getters() { return _getters; }
+
+	@private string[string] _mutations;
+	@property O mutations(this O)(string[string] newMutations) { _mutations = newMutations; return cast(O)this; }
+	@property string[string] mutations() { return _mutations; }
+	
+	@private string[string] _actions;
+	@property O actions(this O)(string[string] newActions) { _actions = newActions; return cast(O)this; }
+	@property string[string] actions() { return _actions; }
+
+	@private string[string] _modules;
+	@property O modules(this O)(string[string] newModules) { _modules = newModules; return cast(O)this; }
+	@property string[string] modules() { return _modules; }
 
 	bool opEquals(string txt) { return toString == txt; }
 
