@@ -6,7 +6,7 @@ class DVUEComponent : DVUEObj {
 	this() { super(); }
 
 	mixin(TProperty!("string", "templ"));
-	O templ(this O)(DH5Obj h5) { _templ=h5.toString; return cast(O)this; }
+	//O templ(this O)(DH5Obj h5) { _templ=h5.toString; return cast(O)this; }
 
 	mixin(TProperty!("DVUEProp[string]", "props"));
 	mixin(TProperty!("string", "render"));

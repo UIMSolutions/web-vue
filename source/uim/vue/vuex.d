@@ -4,13 +4,21 @@ import uim.vue;
 
 class DVuex {
 	this() {}
-	this(string name) { this(); _name = name; }
+	this(string aName) { this(); _name = aName; }
+	this(string aName, string[string] someStates, string[string] someGetters = null, string[string] someMutations = null, string[string] someActions = null, string[string] someModules = null) { 
+		this(aName); 
+		_state = someStates;
+		_getters = someGetters;
+		_mutations = someMutations;
+		_actions = someActions;
+		_modules = someModules;
+		}
 
-	@private string[string] _name;
-	@property O name(this O)(string[string] newName) { _name = newName; return cast(O)this; }
-	@property string[string] name() { return _name; }
+	private string _name;
+	@property O name(this O)(string newName) { _name = newName; return cast(O)this; }
+	@property string name() { return _name; }
 
-	@private string[string] _state;
+	private string[string] _state;
 	@property O state(this O)(string[string] newState) { _state = newState; return cast(O)this; }
 	@property string[string] state() { return _state; }
 	O state(this O)(string name, int value) { return this.state(name, to!string(value)); } 
@@ -24,19 +32,19 @@ class DVuex {
 		return this.state(name, results); 
 	} 
 
-	@private string[string] _getters;
+	private string[string] _getters;
 	@property O getters(this O)(string[string] newGetters) { _getters = newGetters; return cast(O)this; }
 	@property string[string] getters() { return _getters; }
 
-	@private string[string] _mutations;
+	private string[string] _mutations;
 	@property O mutations(this O)(string[string] newMutations) { _mutations = newMutations; return cast(O)this; }
 	@property string[string] mutations() { return _mutations; }
 	
-	@private string[string] _actions;
+	private string[string] _actions;
 	@property O actions(this O)(string[string] newActions) { _actions = newActions; return cast(O)this; }
 	@property string[string] actions() { return _actions; }
 
-	@private string[string] _modules;
+	private string[string] _modules;
 	@property O modules(this O)(string[string] newModules) { _modules = newModules; return cast(O)this; }
 	@property string[string] modules() { return _modules; }
 

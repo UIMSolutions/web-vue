@@ -3,8 +3,6 @@
 // libraries
 public import uim.core;
 public import uim.oop;
-public import uim.web;
-public import uim.html;
 
 // modules
 public import uim.vue.component;
@@ -29,11 +27,12 @@ public import uim.vue.vuex;
  * --------------------
  * H5DIV.vOn("mousemove", "function") results in `<div v-on:mousemove="function"></div>
  * -------------------- */ 
+ /*
 T vOn(T:DH5Obj)(T h5, string eventName, string value, string[] modifiers = null) {
 	if (modifiers) return h5.attribute("@"~eventName~"."~modifiers.join("."), value);
 	return h5.attribute("@"~eventName, value);
 }
-
+*/
 /** vKey - directive to listen to keyboard events and run some JavaScript when they’re triggered.
  * Params:
  * 		h5 			= HTML5 Obj
@@ -43,6 +42,7 @@ T vOn(T:DH5Obj)(T h5, string eventName, string value, string[] modifiers = null)
  * --------------------
  * H5DIV.vKey("submit") results in `<div @keyup="submit"></div>
  * -------------------- */ 
+ /*
 T vKey(T:DH5Obj)(T h5, string value, string[] modifiers = null) {
 	if (modifiers) return h5.attribute("@keyup."~modifiers.join("."), value);
 	return h5.attribute("@keyup", value);
@@ -57,6 +57,7 @@ T vHtml(T:DH5Obj)(T h5, string value) {
 T vIf(T:DH5Obj)(T h5, string name, string value) {
 	return h5.attribute("v-id:"~name, value);
 }
+*/
 /** vFor - directive to render a list of items based on an array
  * Examples:
  * --------------------
@@ -64,6 +65,7 @@ T vIf(T:DH5Obj)(T h5, string name, string value) {
  * H5LI.vFor("item in items")("{{ item.message }}") same result like above
  * --------------------
  */
+ /*
 T vFor(T:DH5Obj)(T h5, string value) {
 	return h5.attribute("v-for", value);
 }
@@ -76,7 +78,8 @@ T vShow(T:DH5Obj)(T h5, string value) {
 T vElse(T:DH5Obj)(T h5) {
 	return h5.attribute("v-show", "v-show");
 }
-
+*/
+/*
 T vClass(T:DH5Obj)(T h5, string[string] values, bool sort = true) {
 	string[] inner;
 	if (sort) foreach(k; values.keys.sort) {
@@ -92,11 +95,11 @@ T vClass(T:DH5Obj)(T h5, string[string] values, bool sort = true) {
 T vClass(T:DH5Obj)(T h5, string value) {
 	return h5.attribute(":class", value);
 }
-
+*/
 unittest {
 	writeln("Testing ", __MODULE__);
 
-	assert(H5DIV.vOn("mousemove", "function") == `<div @mousemove="function"></div>`);
+/*	assert(H5DIV.vOn("mousemove", "function") == `<div @mousemove="function"></div>`);
 	assert(H5DIV.vKey("function", ["13"]) == `<div @keyup.13="function"></div>`);
 
 	assert(H5LI("{{ item.message }}").vFor("item in items") == `<li v-for="item in items">{{ item.message }}</li>`);
@@ -104,4 +107,5 @@ unittest {
 
 	assert(H5DIV.vClass("xy") == `<div :class="xy"></div>`);
 	assert(H5DIV.vClass(["x":"y"]) == `<div :class="{x:y}"></div>`);
+	*/
 }
