@@ -25,7 +25,8 @@ unittest {
 	writeln("Testing ", __MODULE__);
 
 	auto prop = VUEProp("SomeName");
-	assert(prop.name == "SomeName");
+	assert(VUEProp("SomeName").name == "SomeName");
+	assert(VUEProp.name("SomeName").name == "SomeName");
 	assert(prop.name("newName").name == "newName");
 	assert(prop.types(["aType"]).types == ["aType"]);
 	assert(prop.defaultValue("aDefault").defaultValue == "aDefault");

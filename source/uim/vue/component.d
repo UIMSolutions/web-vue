@@ -4,6 +4,7 @@ import uim.vue;
 
 class DVUEComponent : DVUEObj {
 	this() { super(); }
+	this(string aName) { super(aName); }
 
 	mixin(TProperty!("string", "templ"));
 	//O templ(this O)(DH5Obj h5) { _templ=h5.toString; return cast(O)this; }
@@ -11,11 +12,6 @@ class DVUEComponent : DVUEObj {
 	mixin(TProperty!("DVUEProp[string]", "props"));
 	mixin(TProperty!("string", "render"));
 	mixin(TPropertyAA!("string", "string", "extends"));
-
-	O method(this O)(string aName, string func) { 
-		_methods[aName] = func;
-		return cast(O)this;
-	}
 
 	bool opEquals(string value) {
 		return globalRegistration() == value;
@@ -79,12 +75,13 @@ class DVUEComponent : DVUEObj {
 		return "{"~inner.join(",")~"}";
 	}
 }
-
 auto VUEComponent() { return new DVUEComponent(); }
+auto VUEComponent(string aName) { return new DVUEComponent(aName); }
 
 unittest {
 	writeln("Testing ", __MODULE__);
 
+	assert(VUEComponent("xxx") == "Vue.component('xxx',{});"); 
 	assert(VUEComponent.name("xxx") == "Vue.component('xxx',{});"); 
 	assert(VUEComponent.name("xxx").templ("<h1>hello</h1>") == "Vue.component('xxx',{template:'<h1>hello</h1>'});"); 
 	assert(VUEComponent.name("xxx").templ("<h1>hello</h1>").data(["x":"xx", "y":"yy"]) == "Vue.component('xxx',{data:function(){return{x:xx,y:yy}},template:'<h1>hello</h1>'});"); 

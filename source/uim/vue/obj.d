@@ -27,7 +27,11 @@ class DVUEObj {
 	override string toString() { return ""; }
 }
 auto VUEObj() { return new DVUEObj(); }
+auto VUEObj(string aName) { return new DVUEObj(aName); }
 
 unittest {
 	writeln("Testing ", __MODULE__);
+
+	assert(VUEObj.name("test").name == "test");
+	assert(VUEObj("test").name == "test");
 }

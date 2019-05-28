@@ -70,8 +70,13 @@ auto Vuex() { return new DVuex(); }
 auto Vuex(string name) { return new DVuex(name); }
 
 unittest {
+	writeln("Testing ", __MODULE__);
+	
 	auto vuex = Vuex;
-	assert(vuex.name("store") == "const store = new Vuex.Store({});");
+
+	assert(Vuex("store") == "const store = new Vuex.Store({});");
+	assert(Vuex.name("store") == "const store = new Vuex.Store({});");
+
 	assert(vuex.state("today", "'2019-04-22'") == "const store = new Vuex.Store({state:{today:'2019-04-22'}});");
 	assert(vuex.state("user", "'uim'") == "const store = new Vuex.Store({state:{today:'2019-04-22',user:'uim'}});");
 

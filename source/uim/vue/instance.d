@@ -4,6 +4,7 @@ import uim.vue;
 
 class DVUEInstance : DVUEObj {
 	this() { super(); }
+	this(string aName) { super(aName); }
 
 	mixin(TProperty!("string", "variable"));
 	mixin(TProperty!("string[]", "plugins"));
@@ -41,6 +42,7 @@ class DVUEInstance : DVUEObj {
 	}
 }
 auto VUEInstance() { return new DVUEInstance(); }
+auto VUEInstance(string aName) { return new DVUEInstance(aName); }
 
 unittest {
 	writeln("Testing ", __MODULE__);
@@ -48,6 +50,8 @@ unittest {
 	auto app = VUEInstance;
 	writeln(app);
 
+	assert(VUEInstance == "new Vue({});");
+	assert(VUEInstance("app") == "new Vue({el:'#app'});");
 	assert(VUEInstance.name("app") == "new Vue({el:'#app'});");
 	assert(VUEInstance.variable("vue").name("app") == "var vue = new Vue({el:'#app'});");
 	writeln(app.variable("vue").name("app").data("a", "'b'"));
