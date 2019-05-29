@@ -32,24 +32,30 @@ class DVuex {
 		return this.state(name, results); 
 	} 
 
+	/* Vuex getters handler */
 	private string[string] _getters;
 	@property O getters(this O)(string[string] newGetters) { _getters = newGetters; return cast(O)this; }
 	@property string[string] getters() { return _getters; }
 
+	/* Vuex mutations handler */
 	private string[string] _mutations;
 	@property O mutations(this O)(string[string] newMutations) { _mutations = newMutations; return cast(O)this; }
 	@property string[string] mutations() { return _mutations; }
 	
+	/* Vuex actions handler */
 	private string[string] _actions;
 	@property O actions(this O)(string[string] newActions) { _actions = newActions; return cast(O)this; }
 	@property string[string] actions() { return _actions; }
 
+	/* Vuex modules handler */
 	private string[string] _modules;
 	@property O modules(this O)(string[string] newModules) { _modules = newModules; return cast(O)this; }
 	@property string[string] modules() { return _modules; }
 
+	/* Compare strings */
 	bool opEquals(string txt) { return toString == txt; }
 
+	/* Convert Vuex object to string */
 	override string toString() {
 		string result;
 		string[] inner;
