@@ -27,7 +27,7 @@ class DVueObj {
 	mixin(TPropertyAA!("string", "string", "methods"));
 	unittest {
 		assert(VueObj.methods(["a":"b"]).methods == ["a":"b"]);
-		assert(VueObj.methods("a", "b").methods == ["a":"c"]);
+		assert(VueObj.methods("a", "b").methods == ["a":"b"]);
 	}
 
 	mixin(TPropertyAA!("string", "string", "computed"));

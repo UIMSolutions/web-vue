@@ -29,24 +29,16 @@ class DVuex {
 	} 
 
 	/* Vuex getters handler */
-	private string[string] _getters;
-	@property O getters(this O)(string[string] newGetters) { _getters = newGetters; return cast(O)this; }
-	@property string[string] getters() { return _getters; }
+	mixin(TPropertyAA!("string", "string", "getters"));
 
 	/* Vuex mutations handler */
-	private string[string] _mutations;
-	@property O mutations(this O)(string[string] newMutations) { _mutations = newMutations; return cast(O)this; }
-	@property string[string] mutations() { return _mutations; }
+	mixin(TPropertyAA!("string", "string", "mutations"));
 	
 	/* Vuex actions handler */
-	private string[string] _actions;
-	@property O actions(this O)(string[string] newActions) { _actions = newActions; return cast(O)this; }
-	@property string[string] actions() { return _actions; }
+	mixin(TPropertyAA!("string", "string", "actions"));
 
 	/* Vuex modules handler */
-	private string[string] _modules;
-	@property O modules(this O)(string[string] newModules) { _modules = newModules; return cast(O)this; }
-	@property string[string] modules() { return _modules; }
+	mixin(TPropertyAA!("string", "string", "modules"));
 
 	/* Compare strings */
 	bool opEquals(string txt) { return toString == txt; }
@@ -79,9 +71,7 @@ unittest {
 	assert(Vuex("store") == "const store = new Vuex.Store({});");
 	assert(Vuex.name("store") == "const store = new Vuex.Store({});");
 
-	assert(vuex.state("today", "'2019-04-22'") == "const store = new Vuex.Store({state:{today:'2019-04-22'}});");
-	assert(vuex.state("user", "'uim'") == "const store = new Vuex.Store({state:{today:'2019-04-22',user:'uim'}});");
-
+	assert(Vuex("store").state("today", "'2019-04-22'") == "const store = new Vuex.Store({state:{today:'2019-04-22'}});");
 	assert(Vuex("store").state("today", "'2019-04-22'").state("user", "'uim'") == "const store = new Vuex.Store({state:{today:'2019-04-22',user:'uim'}});");
 
 	vuex = Vuex("store");
