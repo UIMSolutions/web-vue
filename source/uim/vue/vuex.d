@@ -18,14 +18,10 @@ class DVuex {
 	@property O name(this O)(string newName) { _name = newName; return cast(O)this; }
 	@property string name() { return _name; }
 
-	private string[string] _state;
-	@property O state(this O)(string[string] newState) { _state = newState; return cast(O)this; }
-	@property string[string] state() { return _state; }
-	O state(this O)(string name, int value) { return this.state(name, to!string(value)); } 
-	O state(this O)(string name, Json value) { return this.state(name, value.toString); } 
-	O state(this O)(string name, string[] values) {
-		return this.state(name, "["~values.join(",")~"]"); 
-	} 
+	mixin(TPropertyAA!("string", "string", "state"));
+	O state(this O)(string name, int value) { this.state(name, to!string(value)); return cast(O)this; } 
+	O state(this O)(string name, Json value) { this.state(name, value.toString); return cast(O)this; } 
+	O state(this O)(string name, string[] values) { this.state(name, "["~values.join(",")~"]"); return cast(O)this; } 
 	O state(this O)(string name, Json[] values) {
 		string[] results;
 		foreach(value; values) { results ~= value.toString; }

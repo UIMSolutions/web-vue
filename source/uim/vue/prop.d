@@ -3,7 +3,8 @@
 import uim.vue;
 
 class DVUEProp {
-	this(string aName) { _name = aName; }
+	this() { }
+	this(string aName) { this(); _name = aName; }
 	this(string aName, string[] someTypes) { this(aName); this.types = someTypes; }
 	this(string aName, string[] someTypes, string aDefaultValue) { this(aName, someTypes); this.defaultValue = aDefaultValue; }
 	this(string aName, string[] someTypes, string aDefaultValue, bool isRequired) { this(aName, someTypes, aDefaultValue); this.required = isRequired; }
@@ -15,6 +16,7 @@ class DVUEProp {
 	mixin(TProperty!("bool", "required"));
 	mixin(TProperty!("string", "validator"));
 }
+auto VUEProp() { return new DVUEProp(); }
 auto VUEProp(string aName) { return new DVUEProp(aName); }
 auto VUEProp(string aName, string[] types) { return new DVUEProp(aName, types); }
 auto VUEProp(string aName, string[] types, string defaultValue) { return new DVUEProp(aName, types, defaultValue); }

@@ -2,36 +2,41 @@
 
 import uim.vue;
 
-class DVUEObj {
+class DVueObj {
 	this() {}
-	this(string aName) { this; _name = aName; }
+	this(string aName) { this(); _name = aName; }
 
 	mixin(TProperty!("string", "name"));
+	unittest {
+		assert(VueObj.name("test").name == "test");
+		assert(VueObj("test").name == "test");
+	}
 
 	mixin(TPropertyAA!("string", "string", "data"));
-	O data(string name, string value) { _data[name] = value; return cast(O)this; }
-	O data(string name, T value) { _data[name] = to!string(value); return cast(O)this; }
+	unittest {
+		assert(VueObj.data(["a":"b"]).data == ["a":"b"]);
+		assert(VueObj.data("a", "b").data == ["a":"b"]);
+	}
 
 	mixin(TPropertyAA!("string", "string", "filters"));
-	O filter(string name, string value) { _filters[name] = value; return cast(O)this; }
+	unittest {
+		assert(VueObj.filters(["a":"b"]).filters == ["a":"b"]);
+		assert(VueObj.filters("a", "b").filters == ["a":"b"]);
+	}
 
 	mixin(TPropertyAA!("string", "string", "methods"));
-	O method(string name, string value) { _methods[name] = value; return cast(O)this; }
+	unittest {
+		assert(VueObj.methods(["a":"b"]).methods == ["a":"b"]);
+		assert(VueObj.methods("a", "b").methods == ["a":"c"]);
+	}
 
 	mixin(TPropertyAA!("string", "string", "computed"));
-	O computed(string name, string value) { _computed[name] = value; return cast(O)this; }
 
 	mixin(TPropertyAA!("string", "string", "watch"));
-	O watch(string name, string value) { _watch[name] = value; return cast(O)this; }
 
+	bool opEqual(string txt) { return toString == txt; }
 	override string toString() { return ""; }
 }
-auto VUEObj() { return new DVUEObj(); }
-auto VUEObj(string aName) { return new DVUEObj(aName); }
+auto VueObj() { return new DVueObj(); }
+auto VueObj(string aName) { return new DVueObj(aName); }
 
-unittest {
-	writeln("Testing ", __MODULE__);
-
-	assert(VUEObj.name("test").name == "test");
-	assert(VUEObj("test").name == "test");
-}

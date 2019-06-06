@@ -2,7 +2,7 @@
 
 import uim.vue;
 
-class DVUEComponent : DVUEObj {
+class DVUEComponent : DVueObj {
 	this() { super(); }
 	this(string aName) { super(aName); }
 
