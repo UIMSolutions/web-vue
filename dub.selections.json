@@ -1,0 +1,9 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"stdx-allocator": "2.77.5",
+		"uim-core": "~master",
+		"uim-oop": "~master",
+		"vibe-d": "0.8.5"
+	}
+}
