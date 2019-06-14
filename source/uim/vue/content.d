@@ -3,7 +3,6 @@
 import uim.vue;
 
 class DVUEContent {
-/*
 	this() {
 		root = H5DIV;
 		app = new DVUEInstance;
@@ -21,7 +20,6 @@ class DVUEContent {
 
 		return result;
 	}
-	*/
 }
 auto VUEContent() { return new DVUEContent; }
 
