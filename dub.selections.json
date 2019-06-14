@@ -2,8 +2,11 @@
 	"fileVersion": 1,
 	"versions": {
 		"stdx-allocator": "2.77.5",
-		"uim-core": "~master",
-		"uim-oop": "~master",
+		"uim-bootstrap": "0.19.6",
+		"uim-core": "0.19.6",
+		"uim-html": "0.19.6",
+		"uim-oop": "0.19.6",
+		"uim-web": "0.19.6",
 		"vibe-d": "0.8.5"
 	}
 }

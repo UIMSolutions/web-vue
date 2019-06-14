@@ -7,7 +7,10 @@
     "targetType": "library",
 	"dependencies": {
 		"vibe-d:data": "==0.8.5",
-		"uim-core": "~master",
-		"uim-oop": "~master"
+		"uim-core": "~>0.19.6",
+		"uim-oop": "~>0.19.6",
+		"uim-web": "~>0.19.6",
+		"uim-html": "~>0.19.6",
+		"uim-bootstrap": "~>0.19.6"
 	}
 }
