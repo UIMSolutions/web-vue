@@ -1,16 +1,23 @@
 ﻿module uim.vue;
 
+public import vibe.vibe;
+
 // libraries
 public import uim.core;
 public import uim.oop;
 public import uim.web;
 public import uim.html;
 
+public import uim.vue.vueui5;
+
 // modules
+public import uim.vue.app;
 public import uim.vue.component;
 public import uim.vue.content;
 public import uim.vue.data;
+public import uim.vue.index;
 public import uim.vue.instance;
+public import uim.vue.main;
 public import uim.vue.mixins;
 public import uim.vue.obj;
 public import uim.vue.page;

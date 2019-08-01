@@ -13,6 +13,11 @@ class DVUEComponent : DVueObj {
 	mixin(TProperty!("string", "render"));
 	mixin(TPropertyAA!("string", "string", "extends"));
 
+	mixin(TProperty!("string", "script"));
+	mixin(TProperty!("string", "style"));
+
+	mixin(TProperty!("string", "content"));
+
 	bool opEquals(string value) {
 		return globalRegistration() == value;
 	}
@@ -32,47 +37,62 @@ class DVUEComponent : DVueObj {
 		return result;
 	}
 
+	void request(HTTPServerRequest req, HTTPServerResponse res) {
+		res.writeBody(toString, "text/javascript");
+	}
+
+	string toVue() {
+		string result;
+		if (_templ) result ~= "<template>"~_templ~"</template>";
+		if (_script) result ~= "<script>"~_script~"</script>";
+		if (_style) result ~= "<style scoped>"~_style~"</style>";
+		return result;
+	}
+
 	override string toString() {
-		string[] inner;
-		if (!_extends.empty) inner ~= "extends:{"~_extends.toJS(true)~"}";
-		if (!_computed.empty) inner ~= "computed:{"~_computed.toJS(true)~"}";
-		if (!_data.empty) inner ~= "data:function(){return{"~_data.toJS(true)~"}}";
-		
-		if (_props) {
-			bool simple = true;
-			foreach(name, prop; _props) if (prop) simple = false;
+		if (!_content) {
+			string[] inner;
+			if (!_extends.empty) inner ~= "extends:{"~_extends.toJS(true)~"}";
+			if (!_computed.empty) inner ~= "computed:{"~_computed.toJS(true)~"}";
+			if (!_data.empty) inner ~= "data:function(){return{"~_data.toJS(true)~"}}";
 			
-			if (simple) {
-				string[] names; foreach(key; props.keys.sort) names ~= "'"~key~"'";
-				inner ~= "props:["~names.join(",")~"]"; 
+			if (_props) {
+				bool simple = true;
+				foreach(name, prop; _props) if (prop) simple = false;
+				
+				if (simple) {
+					string[] names; foreach(key; props.keys.sort) names ~= "'"~key~"'";
+					inner ~= "props:["~names.join(",")~"]"; 
+				}
+				else {
+					string[] ps;
+					foreach(key; props.keys.sort) {
+						auto p = props[key];
+						if (!p) ps ~= "'"~key~"'";
+						else {
+							if (p.types.length == 1) ps ~= key~":"~p.types[0];
+							else ps ~= key~":["~p.types.join(",")~"]";
+							if (p.defaultValue.length > 0) ps ~= "default:"~p.defaultValue;
+							if (p.required) ps ~= "required:true";
+							if (p.validator.length > 0) ps ~= "validator: function (value) {"~p.validator~"}";
+						}
+					}	
+					inner ~= "props:{"~ps.join(",")~"}";
+				}
 			}
-			else {
-				string[] ps;
-				foreach(key; props.keys.sort) {
-					auto p = props[key];
-					if (!p) ps ~= "'"~key~"'";
-					else {
-						if (p.types.length == 1) ps ~= key~":"~p.types[0];
-						else ps ~= key~":["~p.types.join(",")~"]";
-						if (p.defaultValue.length > 0) ps ~= "default:"~p.defaultValue;
-						if (p.required) ps ~= "required:true";
-						if (p.validator.length > 0) ps ~= "validator: function (value) {"~p.validator~"}";
-					}
-				}	
-				inner ~= "props:{"~ps.join(",")~"}";
+			
+			if (_methods) {
+				string[] mds;
+				foreach(key; _methods.keys.sort) mds ~= key~": "~_methods[key]~"\n";
+				inner ~= "\nmethods:{"~mds.join(",")~"}";
 			}
+			if (!_watch.empty) inner ~= "watch:{"~_watch.toJS(true)~"}";
+			if (!_filters.empty) inner ~= "filters:{"~_filters.toJS(true)~"}";
+			if (templ) inner ~= "template:'"~templ~"'"; 
+			if (_render) inner ~= `render: function (createElement) {`~_render~`}`;
+			content =  "{"~inner.join(",")~"}";
 		}
-		
-		if (_methods) {
-			string[] mds;
-			foreach(key; _methods.keys.sort) mds ~= key~": "~_methods[key]~"\n";
-			inner ~= "\nmethods:{"~mds.join(",")~"}";
-		}
-		if (!_watch.empty) inner ~= "watch:{"~_watch.toJS(true)~"}";
-		if (!_filters.empty) inner ~= "filters:{"~_filters.toJS(true)~"}";
-		if (templ) inner ~= "template:'"~templ~"'"; 
-		if (_render) inner ~= `render: function (createElement) {`~_render~`}`;
-		return "{"~inner.join(",")~"}";
+		return _content;
 	}
 }
 auto VUEComponent() { return new DVUEComponent(); }
