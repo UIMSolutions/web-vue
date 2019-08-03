@@ -1,8 +1,8 @@
-﻿module uim.vue.mixins;
+﻿module uim.vue.module_;
 
-import uim.vue;
+import uim.vue; 
 
-class DVUEMixin {
+class DVUEModule {
 	this() {
 	}
 
@@ -29,7 +29,7 @@ class DVUEMixin {
 		return _content;
 	}
 }
-auto VUEMixin() { return new DVUEMixin(); }
+auto VUEModule() { return new DVUEModule(); }
 
 unittest {
 

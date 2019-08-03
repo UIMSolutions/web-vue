@@ -7,12 +7,23 @@ class DVUEApp : DVueObj {
 	this(string name, string someContent) { super(name); _content = someContent; }
 
 	mixin(TProperty!("string", "rootPath"));
+
 	mixin(TProperty!("string", "content"));
 	mixin(TProperty!("DVUEComponent[string]", "components"));
-	O component(this O)(string name, string newContent) { _components[name] = VUEComponent.content(newContent); return cast(O)this; }
+	O components(this O)(string name, DVUEComponent newContent) { _components[name] = newContent; return cast(O)this; }
+	O components(this O)(string name, string newContent) { _components[name] = VUEComponent.content(newContent); return cast(O)this; }
+
+	mixin(TProperty!("DVUEMixin[string]", "mixins"));
+	O mixins(this O)(string name, DVUEMixin newContent) { _mixins[name] = newContent; return cast(O)this; }
+	O mixins(this O)(string name, string newContent) { _mixins[name] = VUEMixin.content(newContent); return cast(O)this; }
+
+	mixin(TProperty!("DVUEModule[string]", "modules"));
+	O modules(this O)(string name, DVUEModule newContent) { _modules[name] = newContent; return cast(O)this; }
+	O modules(this O)(string name, string newContent) { _modules[name] = VUEModule.content(newContent); return cast(O)this; }
 
 	mixin(TProperty!("DVUEIndex", "index"));
 	O index(this O)(string newContent) { _index = VUEIndex.content(newContent); return cast(O)this; }
+	O index(this O)(string newContent, string function(string, string[string]) func) { _index = VUEIndex.content(newContent).layout(func); return cast(O)this; }
 	
 	mixin(TProperty!("DVUEMain", "start"));
 	O start(this O)(string newContent) { _start = VUEMain.content(newContent); return cast(O)this; }
@@ -35,6 +46,8 @@ class DVUEApp : DVueObj {
 						auto name = pathItems[1..$].join("/");
 						switch(type) {
 							case "component": if (name in _components) _components[name].request(req, res); break;
+							case "mixin": if (name in _mixins) _mixins[name].request(req, res); break;
+							case "module": if (name in _modules) _modules[name].request(req, res); break;
 							default: break;
 						}
 					}

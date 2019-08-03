@@ -7,8 +7,8 @@ public import uim.core;
 public import uim.oop;
 public import uim.web;
 public import uim.html;
-
-public import uim.vue.vueui5;
+public import uim.javascript;
+// public import uim.json;
 
 // modules
 public import uim.vue.app;
@@ -19,6 +19,7 @@ public import uim.vue.index;
 public import uim.vue.instance;
 public import uim.vue.main;
 public import uim.vue.mixins;
+public import uim.vue.module_;
 public import uim.vue.obj;
 public import uim.vue.page;
 public import uim.vue.prop;

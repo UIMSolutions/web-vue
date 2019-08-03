@@ -31,9 +31,15 @@ class DVueObj {
 	}
 
 	mixin(TPropertyAA!("string", "string", "computed"));
+	O computed(this O)(string name, DJS txt) { _computed[name] = txt.toString; return cast(O)this; }	
+	unittest {
+		assert(VueObj.computed("a","b").computed == ["a":"b"]);
+	}
 
 	mixin(TPropertyAA!("string", "string", "watch"));
-
+	unittest {
+		assert(VueObj.watch(["a":"b"]).watch == ["a":"b"]);
+	}
 	bool opEqual(string txt) { return toString == txt; }
 	override string toString() { return ""; }
 }

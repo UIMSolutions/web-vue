@@ -5,11 +5,15 @@ import uim.vue;
 class DVUEIndex {
 	this() {}
 
+	string function(string, string[string]) _layout;
+	@property layout(this O)(string function(string, string[string]) func) { _layout = func; return cast(O)this; }
+
 	mixin(TProperty!("string", "content"));
 	mixin(TProperty!("string[string]", "components"));
 
 	void request(HTTPServerRequest req, HTTPServerResponse res) {
-		res.writeBody(toString, "text/html");
+		if (_layout) res.writeBody(_layout(toString, null), "text/html");
+		else res.writeBody(toString, "text/html");
 	}
 	override string toString() {
 		return (_content) ? _content : "";
@@ -18,6 +22,5 @@ class DVUEIndex {
 auto VUEIndex() { return new DVUEIndex; }
 
 unittest {
-	writeln("Testing ", __MODULE__);
 }
 

@@ -1,8 +1,0 @@
-module uim.vue.vueui5.shellbar;
-
-public import uim.vue;
-
-DVUEComponent vueShellBarProductSwitcherItem;
-DVUEComponent vueShellBarProductSwitcherItemImg;
-DVUEComponent vueShellBarProductSwitcherItemTitle;
-DVUEComponent vueShellBarUserMenuControl;
