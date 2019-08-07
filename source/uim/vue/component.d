@@ -2,15 +2,59 @@
 
 import uim.vue;
 
-class DVUEComponent : DVueObj {
+class DVUEComponent : DJSModule {
 	this() { super(); }
-	this(string aName) { super(aName); }
+	this(DVUEApp anApp) { this(); _app = anApp; }
+	this(string aName) { this(); _name = aName; }
+	this(DVUEApp anApp, string aName) { this(anApp); _name = aName; }
+
+	mixin(TProperty!("DVUEApp", "app"));
+
+	mixin(TProperty!("string", "name"));
+	unittest {
+		assert(VUEComponent.name("test").name == "test");
+		assert(VUEComponent("test").name == "test");
+	}
+
+	mixin(TPropertyAA!("string", "string", "data"));
+	unittest {
+		assert(VUEComponent.data(["a":"b"]).data == ["a":"b"]);
+		assert(VUEComponent.data("a", "b").data == ["a":"b"]);
+	}
+
+	mixin(TPropertyAA!("string", "string", "filters"));
+	unittest {
+		assert(VUEComponent.filters(["a":"b"]).filters == ["a":"b"]);
+		assert(VUEComponent.filters("a", "b").filters == ["a":"b"]);
+	}
+
+	mixin(TPropertyAA!("string", "string", "methods"));
+	unittest {
+		assert(VUEComponent.methods(["a":"b"]).methods == ["a":"b"]);
+		assert(VUEComponent.methods("a", "b").methods == ["a":"b"]);
+	}
+
+	mixin(TPropertyAA!("string", "string", "computed"));
+	O computed(this O)(string name, DJS txt) { _computed[name] = txt.toString; return cast(O)this; }	
+	unittest {
+		assert(VUEComponent.computed(["a":"b"]).computed == ["a":"b"]);
+		assert(VUEComponent.computed("a","b").computed == ["a":"b"]);
+	}
+
+	mixin(TPropertyAA!("string", "string", "watch"));
+	unittest {
+		assert(VUEComponent.watch(["a":"b"]).watch == ["a":"b"]);
+		assert(VUEComponent.watch("a", "b").watch == ["a":"b"]);
+	}
 
 	mixin(TProperty!("string", "template_"));
-	O template_(this O)(DH5Obj h5) { _template_=h5.toString; return cast(O)this; }
+	O template_(this O)(DH5Obj h5) { _template_ = h5.toString; return cast(O)this; }
 
-	mixin(TProperty!("string[string]", "props"));
-	O props(this O)(string name, string values) { _props[name] = values; return cast(O)this; }
+	mixin(TPropertyAA!("string", "string", "props"));
+	unittest {
+		assert(VUEComponent.props(["a":"b"]).props == ["a":"b"]);
+		assert(VUEComponent.props("a","b").props == ["a":"b"]);
+	}
 
 	mixin(TProperty!("string", "render"));
 	mixin(TPropertyAA!("string", "string", "extends"));
@@ -18,29 +62,30 @@ class DVUEComponent : DVueObj {
 	mixin(TProperty!("string", "script"));
 	mixin(TProperty!("string", "style"));
 
-	mixin(TProperty!("string[]", "components"));
-	O components(this O)(string comp) { _components ~= comp; return cast(O)this; }
+	O imports(this O)(DVUEComponent[] someComponents...) { foreach(comp; someComponents) this.components(comp); return cast(O)this; }
+	O imports(this O)(DVUEComponent[] someComponents) { foreach(comp; someComponents) this.components(comp); return cast(O)this; }
+	O imports(this O)(DVUEComponent aComponent) { this.components(aComponent); return cast(O)this; }
+	O imports(this O)(DVUEModule aModule) { this.imports(aModule.name, "../module/"~aModule.name~".js"); return cast(O)this; }
+	O imports(this O)(DVUEMixin aMixin) { this.imports(aMixin.name, "../mixin/"~aMixin.name~".js"); return cast(O)this; }
+	O imports(this O)(string name, string path) { this.imports(name~" from '"~path~"'"); return cast(O)this; }
+	O imports(this O)(string text) { _imports ~= "import "~text~";"; return cast(O)this; }
 
-	mixin(TProperty!("string[string]", "computed"));
-	O computed(this O)(string name, DJS txt) { _computed[name] = txt.toString; return cast(O)this; }	
-	O computed(this O)(string name, string txt) { _computed[name] = txt; return cast(O)this; }	
+	mixin(TProperty!("string[]", "components"));
+	O components(this O)(DVUEComponent aComponent) { 
+		this.imports(aComponent.name, "./"~aComponent.name~".js"); 
+		this.components(aComponent.name); 
+		if (app) app.components(aComponent); 
+		return cast(O)this; }
+	O components(this O)(string aComponent) { _components ~= aComponent; return cast(O)this; }
 	unittest {
-		assert(VUEComponent.computed("a","b").computed == ["a":"b"]);
-		writeln(VUEComponent.computed("a","b").toJS);
-		assert(VUEComponent.computed("a","b") == "export default {computed:{a:function(){b}}}");
+		writeln("VUEComponent.components(Test)");
+		writeln(VUEComponent.components("Test").toJS);
 	}
 
 	mixin(TProperty!("string[]", "mixins"));
 	O mixins(this O)(string mix) { _mixins ~= mix; return cast(O)this; }
 
-	mixin(TProperty!("string[]", "imports"));
-	O imports(this O)(string text) { _imports ~= "import "~text; return cast(O)this; }
-
 	mixin(TProperty!("string", "content"));
-
-	bool opEquals(string value) {
-		return globalRegistration() == value;
-	}
 
 	string globalRegistration() {
 		debug writeln(_name);
@@ -117,7 +162,7 @@ class DVUEComponent : DVueObj {
 
 	string toJS() {
 		string result;
-		if (imports) result ~= imports.join("");
+		if (_imports) result ~= _imports.join("");
 
 		string[] inner;
 		if (_name) inner ~= `name:"%s"`.format(_name);	
@@ -133,7 +178,6 @@ class DVUEComponent : DVueObj {
 		if (m) inner ~= "methods:{%s}".format(m.join(","));
 
 		string[] c;
-		writeln(_computed);
 		foreach(k, v; _computed) c ~= "%s{%s}".format(k, v);
 		if (c) inner ~= "computed:{%s}".format(c.join(","));
 
@@ -143,6 +187,8 @@ class DVUEComponent : DVueObj {
 }
 auto VUEComponent() { return new DVUEComponent(); }
 auto VUEComponent(string aName) { return new DVUEComponent(aName); }
+auto VUEComponent(DVUEApp anApp) { return new DVUEComponent(anApp); }
+auto VUEComponent(DVUEApp anApp, string aName) { return new DVUEComponent(anApp, aName); }
 
 unittest {
 	writeln("Testing ", __MODULE__);

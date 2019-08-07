@@ -2,35 +2,45 @@
 
 import uim.vue; 
 
-class DVUEModule {
-	this() {
+class DVUEModule : DJSModule {
+	this() { super(); }
+	this(DVUEApp anApp) { this(); _app = anApp; }
+	this(string aName) { this(); _name = aName; }
+	this(DVUEApp anApp, string aName) { this(anApp); _name = aName; }
+
+	// App which uses this module
+	mixin(TProperty!("DVUEApp", "app"));
+
+	// Name of module
+	mixin(TProperty!("string", "name"));
+	unittest {
+		assert(VUEModule.name("test").name == "test");
+		assert(VUEModule("test").name == "test");
 	}
 
-	mixin(TProperty!("string[]", "imports"));
-	O imports(this O)(string text) { _imports ~= "import "~text; return cast(O)this; }
-
-	mixin(TProperty!("string[string]", "exports"));
-	O exports(this O)(string text) { _exports["default"] = text; return cast(O)this; }
-	O exports(this O)(string name, string text) { _exports[name] = text; return cast(O)this; }
-
-	mixin(TProperty!("string", "content"));
-	O content(this O)(DJS js) { _content = js.toString; return cast(O)this; }
+	// Path
+	mixin(TProperty!("string", "path"));
+	unittest {
+		assert(VUEModule.path("/module/test.js").path == "/module/test.js");
+	}
 
 	void request(HTTPServerRequest req, HTTPServerResponse res) {
-		res.writeBody(toJS, "text/javascript");
-	}
-	string toJS() {
-		if (!_content) {
-			string result;
-			if (imports) result ~= imports.join("");
-			foreach(k, v; exports) result ~= "export %s{%s}".format(k, v);
-			_content = result;
-		}
-		return _content;
+		res.writeBody(toString, "text/javascript");
 	}
 }
 auto VUEModule() { return new DVUEModule(); }
+auto VUEModule(string aName) { return new DVUEModule(aName); }
+auto VUEModule(DVUEApp anApp) { return new DVUEModule(anApp); }
+auto VUEModule(DVUEApp anApp, string aName) { return new DVUEModule(anApp, aName); }
 
 unittest {
+	assert(VUEModule.imports(["name":"file.js"]) == "import name from 'file.js';");
+	assert(VUEModule.imports(["name from 'file.js'", "othername from 'otherfile.js'"]) == "import name from 'file.js';import othername from 'otherfile.js';");
 
+	assert(VUEModule.imports("name", "file.js") == "import name from 'file.js';");
+	assert(VUEModule.imports("name from 'file.js'") == "import name from 'file.js';");
+
+	assert(VUEModule.exportsDefault("{ var a = 1; }") == "export default { var a = 1; };");
+	assert(VUEModule.exports(["const foo = Math.sqrt(2)"]) == "export const foo = Math.sqrt(2);");
+	assert(VUEModule.exports("const foo = Math.sqrt(2)") == "export const foo = Math.sqrt(2);");
 }
