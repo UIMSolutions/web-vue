@@ -30,7 +30,11 @@ class DVUEApp : DVueObj {
 	mixin(TProperty!("DVUEIndex", "index"));
 	O index(this O)(string newContent) { _index = VUEIndex.content(newContent); return cast(O)this; }
 	O index(this O)(string newContent, string function(string, string[string]) func, string[string] someParameters = null) { _index = VUEIndex.content(newContent).layout(func).parameters(someParameters); return cast(O)this; }
-	
+
+	mixin(TProperty!("DVUEPage[string]", "pages"));
+	O pages(this O)(string name, DVUEPage newPage) { newPage.app(this); _pages[name] = newPage; return cast(O)this; }
+	O pages(this O)(string name, string newPage) { _pages[name] = VUEPage(this).content(newPage); return cast(O)this; }
+
 	mixin(TProperty!("DVUEMain", "start"));
 	O start(this O)(string newContent) { _start = VUEMain.content(newContent); return cast(O)this; }
 
@@ -56,6 +60,7 @@ class DVUEApp : DVueObj {
 							case "component": if (name in _components) _components[name].request(req, res); break;
 							case "mixin": if (name in _mixins) _mixins[name].request(req, res); break;
 							case "module": if (name in _modules) _modules[name].request(req, res); break;
+							case "page": if (name in _pages) _pages[name].request(req, res); break;
 							default: break;
 						}
 					}
