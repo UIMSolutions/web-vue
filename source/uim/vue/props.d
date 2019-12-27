@@ -10,5 +10,5 @@ class DVUEProps {
 auto VUEProps() { return new DVUEProps(); }
 
 unittest {
-	writeln("Testing ", __MODULE__);
+	
 }

@@ -22,10 +22,8 @@ auto VUEProp(string aName, string[] types) { return new DVUEProp(aName, types); 
 auto VUEProp(string aName, string[] types, string defaultValue) { return new DVUEProp(aName, types, defaultValue); }
 auto VUEProp(string aName, string[] types, string defaultValue, bool required) { return new DVUEProp(aName, types, defaultValue, required); }
 auto VUEProp(string aName, string[] types, string defaultValue, bool required, string validator) { return new DVUEProp(aName, types, defaultValue, required, validator); }
-
+///
 unittest {
-	writeln("Testing ", __MODULE__);
-
 	auto prop = VUEProp("SomeName");
 	assert(VUEProp("SomeName").name == "SomeName");
 	assert(VUEProp.name("SomeName").name == "SomeName");
