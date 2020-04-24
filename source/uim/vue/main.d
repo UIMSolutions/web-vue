@@ -6,13 +6,13 @@ class DVUEMain {
 	this() {
 	}
 
-	mixin(XPropertyString!("content"));
+	mixin(XString!("content"));
 	unittest {
 //		assert(VUEMain.)	
 	}
 
 	/// A hash of components to be made available to the Vue instance.
-	mixin(XPropertyAA!"components"); 
+	mixin(XStringAA!"components"); 
 	unittest {
 		assert(VUEMain.components("a","b").components == ["a":"b"]);
 		assert(VUEMain.components("a","b").components == ["a":"b"]);
@@ -26,7 +26,7 @@ class DVUEMain {
 		res.writeBody(toString, "text/javascript");
 	}
 
-		/// Compare 
+	/// Compare with resulting string 
 	bool opEquals(string txt) { return toString == txt; }
 	unittest{
 		assert(VUEMain == VUEMain.toString);

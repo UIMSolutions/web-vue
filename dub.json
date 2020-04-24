@@ -2,11 +2,11 @@
 	"name": "uim-vue",
 	"authors": [ "UI Manufaktur" ],
 	"description": "D library for working with vue",
-	"copyright": "Copyright © 2019, UI Manufaktur UG",
+	"copyright": "Copyright © 2017-2020, UI Manufaktur UG",
 	"license": "Apache 2.0",
-    "targetType": "library",
+  "targetType": "library",
 	"dependencies": {
-		"vibe-d": "==0.8.5"
+		"vibe-d": "~>0.8.6"
 	},
 	"sourcePaths": [
 		"../uim-core",

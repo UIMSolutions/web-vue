@@ -14,18 +14,21 @@ class DVUEObj {
 
 	
 	/// Data object for the Vue instance or component
-	mixin(XPropertyAA!"data"); 
+	mixin(XStringAA!"data"); 
 	O data(this O)(string name) { return data(name, name); }
 	unittest {
 		assert(VUEObj.data("a","b").data == ["a":"b"]);
 		assert(VUEObj.data("a","b").data == ["a":"b"]);
 		assert(VUEObj.data("a","b").data("x","y").data == ["a":"b", "x":"y"]);
-		assert(VUEObj.data("a","b").data("x","y").removeData("a").data == ["x":"y"]);
+		// assert(VUEObj.data("a","b").data("x","y").removeData("a").data == ["x":"y"]);
 		assert(VUEObj.data("a","b").data("a","y").data == ["a":"y"]);
 		// assert(VUEObj.data("a","b").clearData.data == null);
 	}
+	unittest {
+		/// TODO
+	}
 	
-	mixin(XPropertyAA!"methods");
+	mixin(XStringAA!"methods");
 	unittest {
 		assert(VUEObj.methods("a","b").methods == ["a":"b"]);
 		assert(VUEObj.methods("a","b").methods == ["a":"b"]);
@@ -33,6 +36,9 @@ class DVUEObj {
 		assert(VUEObj.methods("a","b").methods("x","y").removeMethods("a").methods == ["x":"y"]);
 		assert(VUEObj.methods("a","b").methods("a","y").methods == ["a":"y"]);
 		// assert(VUEObj.methods("a","b").clearMethods.methods == null);
+	}
+	unittest {
+		/// TODO
 	}
 
 	string[string] _computed;
@@ -55,12 +61,12 @@ class DVUEObj {
 		assert(VUEObj.computed("a","b").computed("a","b","c").computed == ["a":"{get:function(){b},set:function(){c}}"]);
 	}
 	
-	string[string] _watch;
-	string[string] watch() { return _computed; }
-	O watch(this O)(string[string] contents) { foreach(k,v; contents) _watch[k] = "function(value){"~v~"}"; return cast(O)this; }
-	O watch(this O)(string name, string content) { _watch[name] = "function(value){"~content~"}"; return cast(O)this; }
+	mixin(XStringAA!"watch"); 
+	unittest {
+		/// TODO
+	}
 
-	mixin(XPropertyString!"template_"); 
+	mixin(XString!"template_"); 
 	O template_(this O)(DH5Obj h5){ _template_ ~= h5.toString; return cast(O)this; }
 	unittest {
 		assert(VUEObj.template_("a").template_ == "a");
@@ -76,7 +82,11 @@ class DVUEObj {
 			results["methods"] = "{"~funcs.sort.join(",")~"}";
 		}
 		if (_computed) results["computed"] = _computed.toJS(true);
-		if (_watch) results["watch"] = _watch.toJS(true);
+		if (_watch) {
+			string[string] _inner;
+			foreach(k, v; _watch) _inner[k] = "function(value){"~v~"}";
+			results["watch"] = _inner.toJS(true);
+		}
 
 		if (_template_) results["template"] = "`"~_template_~"`";
 

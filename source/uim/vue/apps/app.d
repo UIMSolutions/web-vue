@@ -49,46 +49,6 @@ class DVUEApp : DH5App {
 	/// TODO
 	}
 
-	/// Central request handler
-	override void request(HTTPServerRequest req, HTTPServerResponse res) {
-		writeln("VUEApp");
-		/// Extract appPath from URL path
-	  auto appPath = req.path.replace(_rootPath, "");
-		auto pathItems = appPath.split("/");
-
-		super.request(req, res);
-
-		writeln("VUEApp");
-		if (pathItems.length == 0) { _index.request(req, res); }
-		else {
-			switch(pathItems[0]) {				
-				case "index":
-				case "start": _index.request(req, res); break;
-				case "css": 
-					if (name in _styles) _styles[name].request(req, res);
-					break;
-				case "img": 
-					if (name in _images) _images[name].request(req, res);
-					break;
-				case "js": 
-					if (name in _scripts) _scripts[name].request(req, res);
-					break;
-				case "start.js":
-				case "main.js":
-				case "index.js":
-					string importApp = `import App from './component/App.js'; new Vue({ render: h => h(App) }).$mount('#app');`;
-					auto appName = req.query.get("app", null);
-					if (appName)
-						VUEMain.content(
-								`import App from './component/%s.js'; new Vue({ render: h => h(App) }).$mount('#app');`.format(appName))
-							.request(req, res);
-					else
-						VUEMain.content(importApp).request(req, res);
-					break;
-				default: 
-					break;
-			}
-		}
 	/*
 		}
 		if (pathItems.length == 2) {
@@ -125,7 +85,6 @@ class DVUEApp : DH5App {
 				break;
 			}
 		}*/
-	}
 }
 auto VUEApp() { return new DVUEApp(); }
 auto VUEApp(string aName) { return new DVUEApp(aName); }

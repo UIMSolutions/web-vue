@@ -15,46 +15,53 @@ class DVUEInstance : DVUEObj {
 	}
 
 	/// A hash of components to be made available to the Vue instance.
-	mixin(XPropertyAA!"components"); 
+	mixin(XStringAA!"components"); 
 	unittest {
 		assert(VUEInstance.components("a","b").components == ["a":"b"]);
-		assert(VUEInstance.components("a","b").components == ["a":"b"]);
-		assert(VUEInstance.components("a","b").components("x","y").components == ["a":"b", "x":"y"]);
-		assert(VUEInstance.components("a","b").components("x","y").removeComponents("a").components == ["x":"y"]);
-		assert(VUEInstance.components("a","b").components("a","y").components == ["a":"y"]);
-	//	assert(VUEInstance.components("a","b").clearComponents.components == null);
+		assert(VUEInstance.components(["a":"b"]).components == ["a":"b"]);
+		assert(VUEInstance.components(["a":"b"]).components("x","y").components == ["a":"b", "x":"y"]);
+		/// TODO assert(VUEInstance.components("a","b").components("x","y").removeComponents("a").components == ["x":"y"]);
+		assert(VUEInstance.components(["a":"b"]).components("a","y").components == ["a":"y"]);
+		assert(VUEInstance.components("a","b").clearComponents.components == null);
 	}
 
-	/// A hash of filters to be made available to the Vue instance.
-	mixin(XPropertyAA!"filters"); 
+	/**
+	* filter - A hash of filters to be made available to the Vue instance.
+	*/
+	mixin(XStringAA!"filters"); 
 	unittest {
 		assert(VUEInstance.filters("a","b").filters == ["a":"b"]);
-		assert(VUEInstance.filters("a","b").filters == ["a":"b"]);
-		assert(VUEInstance.filters("a","b").filters("x","y").filters == ["a":"b", "x":"y"]);
-		assert(VUEInstance.filters("a","b").filters("x","y").removeFilters("a").filters == ["x":"y"]);
-		assert(VUEInstance.filters("a","b").filters("a","y").filters == ["a":"y"]);
-	//	assert(VUEInstance.filters("a","b").clearFilters.filters == null);
+		assert(VUEInstance.filters(["a":"b"]).filters == ["a":"b"]);
+		assert(VUEInstance.filters(["a":"b"]).filters("x","y").filters == ["a":"b", "x":"y"]);
+		/// TODO: assert(VUEInstance.filters("a","b").filters("x","y").removeFilters("a").filters == ["x":"y"]);
+		assert(VUEInstance.filters(["a":"b"]).filters("a","y").filters == ["a":"y"]);
+		assert(VUEInstance.filters("a","b").clearFilters.filters == null);
 	}
 
-	/// All lifecycle hooks: 
-	/// beforeCreate, created, beforeMount, mounted, beforeUpdate, updated, activated, deactivated, beforeDestroy, destroyed, errorCaptured
-	mixin(XPropertyAA!"hooks"); 
+	/**
+	* hooks - All lifecycle hooks: 
+	* beforeCreate, created, beforeMount, mounted, beforeUpdate, updated, activated, deactivated, beforeDestroy, destroyed, errorCaptured
+	*/ 
+	mixin(XStringAA!"hooks"); 
 	unittest {
 		assert(VUEInstance.hooks("a","b").hooks == ["a":"b"]);
-		assert(VUEInstance.hooks("a","b").hooks == ["a":"b"]);
-		assert(VUEInstance.hooks("a","b").hooks("x","y").hooks == ["a":"b", "x":"y"]);
-		assert(VUEInstance.hooks("a","b").hooks("x","y").removeHooks("a").hooks == ["x":"y"]);
-		assert(VUEInstance.hooks("a","b").hooks("a","y").hooks == ["a":"y"]);
-	// 	assert(VUEInstance.hooks("a","b").clearHooks.hooks == null);
+		assert(VUEInstance.hooks(["a":"b"]).hooks == ["a":"b"]);
+		assert(VUEInstance.hooks(["a":"b"]).hooks("x","y").hooks == ["a":"b", "x":"y"]);
+		/// TODO assert(VUEInstance.hooks("a","b").hooks("x","y").removeHooks("a").hooks == ["x":"y"]);
+		assert(VUEInstance.hooks(["a":"b"]).hooks("a","y").hooks == ["a":"y"]);
+		assert(VUEInstance.hooks("a","b").clearHooks.hooks == null);
 	}
 
-	mixin(XPropertyArray!"plugins"); 
+	/** 
+	* plugins - Plugins usually add global-level functionality to Vue. 
+	*/
+	mixin(XStringArray!"plugins"); 
 	unittest {
 		assert(VUEInstance.plugins("a").plugins == ["a"]);
 		assert(VUEInstance.plugins(["a","b"]).plugins == ["a","b"]);
 		assert(VUEInstance.plugins("a").plugins("x").plugins == ["a", "x"]);
-		assert(VUEInstance.plugins("a").plugins("x").removePlugins("a").plugins == ["x"]);
-	// 	assert(VUEInstance.plugins(["a","b"]).clearPlugins.plugins == null);
+		//// TODO assert(VUEInstance.plugins("a").plugins("x").removePlugins("a").plugins == ["x"]);
+		assert(VUEInstance.plugins(["a","b"]).clearPlugins.plugins == null);
 	}
 
 	override string[string] settings() {

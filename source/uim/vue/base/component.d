@@ -17,32 +17,47 @@ class DVUEComponent : DVUEObj {
 	unittest {
 	}
 
-	mixin(XPropertyArray!"filters"); 
+	/**
+	* filters - allows to define filters that can be used to apply common text formatting
+	* Example (pretty version, default is minimized)
+	* VUEComponent.filters("capitalize", "if (!value) return '';value = value.toString();return value.charAt(0).toUpperCase() + value.slice(1);")
+	* filters: {
+  *		capitalize: function (value) {
+  *  		if (!value) return '';
+  *  		value = value.toString();
+  *  		return value.charAt(0).toUpperCase() + value.slice(1);
+  *		}
+	*	}
+	*/
+	mixin(XStringAA!"filters"); 
 	unittest {
-		assert(VUEComponent.filters("a").filters == ["a"]);
-		assert(VUEComponent.filters(["a","b"]).filters == ["a","b"]);
-		assert(VUEComponent.filters("a").filters("x").filters == ["a", "x"]);
-		assert(VUEComponent.filters("a").filters("x").removeFilters("a").filters == ["x"]);
-		// assert(VUEComponent.filters(["a","b"]).clearFilters.filters == null);
 	}
 
 	/// Mixins are reusable functionalities for Vue components
-	mixin(XPropertyArray!"mixins"); 
+	mixin(XStringArray!"mixins"); 
 	unittest {
 		assert(VUEComponent.mixins("a").mixins == ["a"]);
 		assert(VUEComponent.mixins(["a","b"]).mixins == ["a","b"]);
 		assert(VUEComponent.mixins("a").mixins("x").mixins == ["a", "x"]);
-		assert(VUEComponent.mixins("a").mixins("x").removeMixins("a").mixins == ["x"]);
-		// assert(VUEComponent.mixins(["a","b"]).clearMixins.mixins == null);
+		// TODO assert(VUEComponent.mixins("a").mixins("x").removeMixins("a").mixins == ["x"]);
+		assert(VUEComponent.mixins(["a","b"]).clearMixins.mixins == null);
 	}
 
-	string[string] _props;
-	auto props() { return _props; }
-	O props(this O)(string[string] values) { foreach(name; values.keys) _props[name] = values[name]; return cast(O)this; }
-	O props(this O)(string name, string value) { _props[name] = value; return cast(O)this; }
-	O props(this O)(string name, string datatype, string defaultValue) { 
-		if (defaultValue.has("return")) _props[name] = "type:%s,default(){return %s}".format(datatype, defaultValue);
-		else _props[name] = "type:%s,default:%s".format(datatype, defaultValue); 
+	mixin(XStringAA!"props");
+	O props(this O)(string name, string datatype, string defaultValue, bool required = false) {
+		string[] results;
+		results ~= (datatype ? "type:%s".format(datatype) : "type:String");
+		if (defaultValue) results ~= (defaultValue.indexOf("return") >= 0 ? "default:function(){%s}".format(defaultValue) : "default:%s".format(defaultValue)); 
+		if (required) results ~= "required:true";
+		_props[name] = "{"~results.join(",")~"}";
+		return cast(O)this; }
+	O props(this O)(string name, string datatype, string defaultValue, string validate, bool required = false) {
+		string[] results;
+		results ~= (datatype ? "type:%s".format(datatype) : "type:String");
+		if (defaultValue) results ~= (defaultValue.indexOf("return") >= 0 ? "default:function(){%s}".format(defaultValue) : "default:%s".format(defaultValue)); 
+		if (validate) results ~=  "validator:function(value){"~validate~"}";
+		if (required) results ~= "required:true";
+		_props[name] = "{"~results.join(",")~"}";
 		return cast(O)this; }
 	unittest {
 		assert(VUEComponent.props("a", "x").props == ["a":"x"]);
@@ -56,16 +71,16 @@ class DVUEComponent : DVUEObj {
 		assert(VUEComponent.render("a").clearRender.render == null);
 	}
 
-	protected string[] _extends;
-	auto extends() { return _extends; }
-	O extends(this O)(string[] values...) { _extends ~= values; return cast(O)this; }
-	O extends(this O)(string[] values) { _extends ~= values; return cast(O)this; }
-	O clearExtends(this O)() { _extends = null; return cast(O)this; }
+	/**
+	* extends - Allows declaratively extending another component without having to use Vue.extend. 
+	* This is primarily intended to make it easier to extend between single file components.
+	*/
+	mixin(XStringArray!"extends");
 	unittest {
 		assert(VUEComponent.extends("a").extends == ["a"]);
 		assert(VUEComponent.extends(["a","b"]).extends == ["a","b"]);
 		assert(VUEComponent.extends("a").extends("x").extends == ["a", "x"]);
-		// assert(VUEComponent.extends("a").extends("x").removeExtends("a").extends == ["x"]);
+		// TODO: assert(VUEComponent.extends("a").extends("x").removeExtends("a").extends == ["x"]);
 		assert(VUEComponent.extends(["a","b"]).clearExtends.extends == null);
 	}
 
@@ -93,11 +108,15 @@ class DVUEComponent : DVUEObj {
 	O imports(this O)(string text) { _imports ~= "import "~text~";"; return cast(O)this; }
 
 	/**
-	 * Local registration of components
+	 * components - Local registration of components
 	 * For each property in the components object, 
 	 * the key will be the name of the custom element, while the value will contain the options object for the component.
-	 * Key and name could be the same
-	 */
+	 * Key and name could be the same. Example:
+	 * components: {
+   * 	ComponentA: ComponentA,
+   * 	'component-b': ComponentB
+   * }
+	 	*/
 	protected string[string] _components;
 	auto components() { return _components; }
 	O clearComponents(this O)() { _components = null; return cast(O)this; }
@@ -163,18 +182,27 @@ class DVUEComponent : DVUEObj {
 		string[string] results = super.settings;
 		if (_classes) this.computed("classes", `return`~this.classes.toJS~`;`);
 
-		if (_data) results["data"] = "function(){return"~_data.toJS(true)~"}";
-		if (_filters) results["filters"] = _filters.toJS;
-		if (_props) {
-			string[string] p;
-			foreach(name; props.keys) {
-				p[name] = "{"~_props[name]~"}";
+		if (_components) {
+			string[string] componentsForVue;
+			foreach(kv; _components.byKeyValue) {
+				if (kv.key.indexOf("-") >= 0) componentsForVue["'"~kv.key~"'"] = kv.value; 
+				else componentsForVue[kv.key] = kv.value;
 			}
-			results["props"] = p.toJS;
+			results["components"] = componentsForVue.toJS;
+		}
+		if (_data) results["data"] = "function(){return"~_data.toJS(true)~"}";
+		if (_filters) {
+			string[string] filtersForVue;
+			foreach(kv; _filters.byKeyValue) filtersForVue[kv.key] = "function(value){"~kv.value~"}";
+			results["filters"] = filtersForVue.toJS;
+		}
+		if (_mixins) results["mixins"] = _mixins.toJS;
+		if (_props) {
+			string[string] propsForVue;
+			foreach(kv; props.byKeyValue) { propsForVue[kv.key] = "{"~kv.value~"}"; }
+			results["props"] = propsForVue.toJS;
 		}
 		if (_watch) results["watch"] = _watch.toJS;
-		if (_components) results["components"] = _components.toJS;
-		if (_mixins) results["mixins"] = _mixins.toJS;
 
 		return results;
 	}
