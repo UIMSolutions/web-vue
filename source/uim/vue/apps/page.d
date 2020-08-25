@@ -31,7 +31,7 @@ class DVUEPage : DH5AppPage {
 		/// TODO
 	}
 
-	override void request(HTTPServerRequest req, HTTPServerResponse res) {
+	override void request(HTTPServerRequest req, HTTPServerResponse res, string[string] parameters = null) {
     parameters["vueApp"] = VUEInstance("app").toString;
     // parameters["jsStart"] = UIMIconbarHorizontal.toVUEComponent.globalRegistration;
 

@@ -125,6 +125,7 @@ class DVUEComponent : DVUEObj {
 	O components(this O)(string name, string aComponent) { _components[name] = aComponent; return cast(O)this;  }
 	unittest {
 		assert(VUEComponent("test").components("componentA") == `Vue.component('test',{components:{componentA:componentA}});`); 
+		writeln(VUEComponent("test").components("component-a", "componentA"));
 		assert(VUEComponent("test").components("component-a", "componentA") == `Vue.component('test',{components:{'component-a':componentA}});`);
 	}
 /* ERROR
@@ -183,12 +184,12 @@ class DVUEComponent : DVUEObj {
 		if (_classes) this.computed("classes", `return`~this.classes.toJS~`;`);
 
 		if (_components) {
-			string[string] componentsForVue;
+			string[] componentsForVue;
 			foreach(kv; _components.byKeyValue) {
-				if (kv.key.indexOf("-") >= 0) componentsForVue["'"~kv.key~"'"] = kv.value; 
-				else componentsForVue[kv.key] = kv.value;
+				if (kv.key.indexOf("-") >= 0) componentsForVue ~= "'%s':%s".format(kv.key, kv.value); 
+				else componentsForVue ~= "%s:%s".format(kv.key, kv.value);
 			}
-			results["components"] = componentsForVue.toJS;
+			results["components"] = "{"~componentsForVue.join(",")~"}";
 		}
 		if (_data) results["data"] = "function(){return"~_data.toJS(true)~"}";
 		if (_filters) {
