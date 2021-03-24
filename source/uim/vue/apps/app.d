@@ -2,40 +2,34 @@
 
 import uim.vue;
 
+@safe:
+
 class DVUEApp : DH5App {
 	this() { super(); }
 	this(string aName) { this().name(aName); }
 	this(string aName, string aRootPath) { this().name(aName).rootPath(aRootPath); }
 
-	O imports(this O)(DVUEComponent aComponent)	{ components(aComponent); return cast(O) this; }
-	O imports(this O)(DVUEMixin aMixin) { mixins(aMixin); return cast(O) this; }
-	O imports(this O)(DVUEModule aModule) { modules(aModule); return cast(O) this; }
+	O imports(this O)(DVUEComponent aComponent)	{ components(aComponent); return cast(O)this; }
+	O imports(this O)(DVUEMixin aMixin) { mixins(aMixin); return cast(O)this; }
+	O imports(this O)(DVUEModule aModule) { modules(aModule); return cast(O)this; }
 
 	private DVUEComponent[string] _components;
+
+	auto component(string name) { if (name in _components) return _components[name]; return null; }
+
 	auto components() { return _components; }
-	O components(this O)(DVUEComponent newComponent) { this.components(newComponent.app(this).name, newComponent); return cast(O) this; }
+	auto components(string[] names...) { return components(names); }
+	auto components(string[] names) { DVUEComponent[string] results; /* = this.components.select(names); */ return results; }
+
+	O components(this O)(DVUEComponent newComponent) { this.components(newComponent.app(this).name, newComponent); return cast(O)this; }
 	O components(this O)(string name, string newComponent) { return this.components(name, VUEComponent(this).content(newComponent)); }
 	O components(this O)(string name, DVUEComponent newComponent) {
 		newComponent.app(this);
 		_components[name] = newComponent;
-		return cast(O) this;
+		return cast(O)this;
 	}
 
-	private DVUEMixin[string] _mixins;
-	auto mixins() { return _mixins; }
-	O mixins(this O)(string[string] newMixins) { foreach(name, mix; newMixins) this.mixins(name, VUEMixin(this).content(mix)); return cast(O)this; }
-	O mixins(this O)(DVUEMixin[string] newMixins) { foreach(name, mix; newMixins) this.mixins(name, VUEMixin(this).content(mix)); return cast(O)this; }
-	O mixins(this O)(string name, string newMixin) { return this.mixins(name, VUEMixin(this).content(newMixin)); }
-	O mixins(this O)(string name, DVUEMixin newMixin) {
-		newMixin.app(this);
-		_mixins[name] = newMixin;
-		return cast(O) this;
-	}
-	unittest {
-		/// TODO
-	}
-
-	DVUEModule[string] _modules;
+/* 	DVUEModule[string] _modules;
 	auto modules() { return _modules; }
 	O modules(this O)(string[string] newModules) { foreach(name, mod; newModules) this.modules(name, VUEModule(this).content(mod)); return cast(O)this; }
 	O modules(this O)(DVUEModule[string] newModules) { foreach(name, mod; newModules) this.modules(name, VUEModule(this).content(mod)); return cast(O)this; }
@@ -43,9 +37,9 @@ class DVUEApp : DH5App {
 	O modules(this O)(string name, DVUEModule newModule) {
 		newModule.app(this);
 		_modules[name] = newModule;
-		return cast(O) this;
+		return cast(O)this;
 	}
-	unittest {
+ */	unittest {
 	/// TODO
 	}
 

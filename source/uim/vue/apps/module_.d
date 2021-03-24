@@ -1,6 +1,8 @@
 ﻿module uim.vue.apps.module_;
 
-import uim.vue; 
+import uim.vue;
+
+@safe: 
 
 class DVUEModule : DJSModule {
 	this() { super(); }

@@ -2,6 +2,8 @@
 
 import uim.vue;
 
+@safe:
+
 class DVUEContent {
 	this() {
 		root = H5Div;

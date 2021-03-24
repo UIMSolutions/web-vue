@@ -1,6 +1,8 @@
-﻿module uim.vue.props;
+﻿module uim.vue.classes.props;
 
 import uim.vue;
+
+@safe:
 
 class DVUEProps {
 	this() {}

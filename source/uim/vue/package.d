@@ -16,16 +16,13 @@ public import uim.javascript;
 
 // Packages
 public import uim.vue.apps;
+public import uim.vue.classes;
 public import uim.vue.content;
 public import uim.vue.data;
 public import uim.vue.base;
 public import uim.vue.html;
+public import uim.vue.helpers;
 public import uim.vue.global;
-
-// Modules
-public import uim.vue.main;
-public import uim.vue.prop;
-public import uim.vue.props;
 public import uim.vue.routers;
 public import uim.vue.state;
 

@@ -2,6 +2,8 @@
 
 import uim.vue;
 
+@safe:
+
 class DVUELayout {
 	this() {}
 }

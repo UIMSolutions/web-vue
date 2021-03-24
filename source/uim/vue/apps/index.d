@@ -2,11 +2,15 @@
 
 import uim.vue;
 
+@safe:
+
 class DVUEIndex : DVUEPage {
-		this() { super(); }
+	this() { super(); }
 	this(DVUEApp anApp) { this().app(anApp); }
 	this(string aName) { this().name(aName); }
 	this(DVUEApp anApp, string aName) { this(anApp).name(aName); }
+
+	alias request = DH5AppObj.request;
 }
 auto VUEIndex() { return new DVUEIndex; }
 auto VUEIndex(string aName) { return new DVUEIndex(aName); }

@@ -2,6 +2,10 @@
 
 import uim.vue;
 
+@safe:
+
+@safe:
+
 class DVUEComponent : DVUEObj {
 	this() { super(); }
 	this(DVUEApp anApp) { this().app(anApp); }
@@ -31,16 +35,7 @@ class DVUEComponent : DVUEObj {
 	*/
 	mixin(XStringAA!"filters"); 
 	unittest {
-	}
-
-	/// Mixins are reusable functionalities for Vue components
-	mixin(XStringArray!"mixins"); 
-	unittest {
-		assert(VUEComponent.mixins("a").mixins == ["a"]);
-		assert(VUEComponent.mixins(["a","b"]).mixins == ["a","b"]);
-		assert(VUEComponent.mixins("a").mixins("x").mixins == ["a", "x"]);
-		// TODO assert(VUEComponent.mixins("a").mixins("x").removeMixins("a").mixins == ["x"]);
-		assert(VUEComponent.mixins(["a","b"]).clearMixins.mixins == null);
+		// assert(VUEComponent.filters("capitalize", "if (!value) return '';value = value.toString();return value.charAt(0).toUpperCase() + value.slice(1);").filters("capitalize").length > 0);
 	}
 
 	mixin(XStringAA!"props");
@@ -49,7 +44,7 @@ class DVUEComponent : DVUEObj {
 		results ~= (datatype ? "type:%s".format(datatype) : "type:String");
 		if (defaultValue) results ~= (defaultValue.indexOf("return") >= 0 ? "default:function(){%s}".format(defaultValue) : "default:%s".format(defaultValue)); 
 		if (required) results ~= "required:true";
-		_props[name] = "{"~results.join(",")~"}";
+		_props[name] = results.join(",");
 		return cast(O)this; }
 	O props(this O)(string name, string datatype, string defaultValue, string validate, bool required = false) {
 		string[] results;
@@ -57,7 +52,7 @@ class DVUEComponent : DVUEObj {
 		if (defaultValue) results ~= (defaultValue.indexOf("return") >= 0 ? "default:function(){%s}".format(defaultValue) : "default:%s".format(defaultValue)); 
 		if (validate) results ~=  "validator:function(value){"~validate~"}";
 		if (required) results ~= "required:true";
-		_props[name] = "{"~results.join(",")~"}";
+		_props[name] = results.join(",");
 		return cast(O)this; }
 	unittest {
 		assert(VUEComponent.props("a", "x").props == ["a":"x"]);
@@ -142,6 +137,22 @@ class DVUEComponent : DVUEObj {
 	}
 */
 	mixin(TProperty!("string", "content"));
+	/**
+	* Mixins are a flexible way to distribute reusable functionalities for Vue components. 
+	* A mixin object can contain any component options. When a component uses a mixin, all options in the mixin will be “mixed” into the component’s own options.
+	**/
+	mixin(XPropertyAA!("string", "DVUEMixin", "mixins"));
+	unittest {
+		auto mixin1 = VUEMixin;
+		auto mixin2 = VUEMixin;
+		assert(VUEComponent.mixins(["test": mixin1]).mixins.length == 1);
+/* 		assert(VUEComponent.mixins(["test": mixin1]).mixinsOne("test") == mixin1);
+		assert(VUEComponent.mixins("test", mixin1).mixinsOne("test") == mixin1);
+		assert(VUEComponent.mixins(["test": mixin1, "test2": mixin2]).mixinsOne("test") == mixin1);
+		assert(VUEComponent.mixins(["test": mixin1, "test2": mixin2]).mixinsAll("test") == [mixin1, mixin2]);
+		assert(VUEComponent.mixins("test", mixin1).mixins("test2", mixin2).mixinsOne("test") == mixin1);
+ */	}
+
 
 	string globalRegistration() {/*
 		// debug writeln("Name = ",_name);
@@ -209,6 +220,15 @@ class DVUEComponent : DVUEObj {
 	}
 	unittest{
 		/// TODO
+	}
+
+	string toVue3(string target) {
+		string result;
+		result ~= target~`.component('%s',%s)`.format(_name, settings.toJS(true));
+		return result;
+	}
+	unittest {
+		assert(VUEComponent.toVue3("test") == "test.component('my-component-name', {`~settings.toJS(true)~`})`");
 	}
 
 	override bool opEquals(string txt) { return toString == txt; }

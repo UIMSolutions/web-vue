@@ -2,6 +2,8 @@
 
 import uim.vue;
 
+@safe:
+
 class DVuex {
 	this() {}
 	this(string aName) { this(); _name = aName; }

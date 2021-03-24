@@ -1,6 +1,8 @@
-﻿module uim.vue.main;
+﻿module uim.vue.classes.main;
 
 import uim.vue;
+
+@safe:
 
 class DVUEMain {
 	this() {
@@ -17,7 +19,7 @@ class DVUEMain {
 		assert(VUEMain.components("a","b").components == ["a":"b"]);
 		assert(VUEMain.components("a","b").components == ["a":"b"]);
 		assert(VUEMain.components("a","b").components("x","y").components == ["a":"b", "x":"y"]);
-		assert(VUEMain.components("a","b").components("x","y").removeComponents("a").components == ["x":"y"]);
+		// assert(VUEMain.components("a","b").components("x","y").removeComponents("a").components == ["x":"y"]);
 		assert(VUEMain.components("a","b").components("a","y").components == ["a":"y"]);
 		// assert(VUEMain.components("a","b").clearComponents.components == null);
 	}

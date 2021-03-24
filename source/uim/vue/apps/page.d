@@ -2,40 +2,37 @@
 
 import uim.vue;
 
+@safe:
+
 class DVUEPage : DH5AppPage {
 	this() { super(); }
 	this(DVUEApp anApp) { this().app(anApp); }
 	this(string aName) { this().name(aName); }
 	this(DVUEApp anApp, string aName) { this(anApp).name(aName); }
 
-	DVUEInstance _instance;
-	auto instance() { return _instance; }
-	O instance(this O)(DVUEInstance newInstance) { _instance = newInstance; return cast(O)this; }
+	// Vue instances in a page
+	mixin(XPropertyAA!("string", "DVUEInstance", "instances"));
 	unittest {
+		assert(VUEPage.instances(["test": VUEInstance("test"), "test2": VUEInstance("test2")]).instances().length == 2);
+/* 		assert(VUEPage.instances([VUEInstance.name("test"), VUEInstance.name("test2")]).instances("test")[0].name == "test");
+		assert(VUEPage.instances(VUEInstance.name("test")).instances(VUEInstance.name("test2")).instances("test")[0].name == "test");
+ */	}
 
+	mixin(XPropertyAA!("string", "DVuex", "stores"));
+	unittest {
+		assert(VUEPage.stores(["test": Vuex("test"), "test2": Vuex("test2")]).stores().length == 2);
 	}
 
-	DVuex _store;
-	auto store() { return _store; }
-	O store(this O)(DVUEInstance newStore) { _store = newStore; return cast(O)this; }
-	unittest {
-		
-	}
-
-	string[string] _components;
-	auto components() { return _components; }
-	O clearComponents(this O)() { _components = null; return cast(O)this; }
-	O components(this O)(string name, string value) { _components[name] = value; return cast(O)this; }
-	O components(this O)(string[string] values) { foreach(k, v; values) _components[k] = v; return cast(O)this; }
+	mixin(XPropertyAA!("string", "DVUEComponent", "components"));
 	unittest {
 		/// TODO
 	}
 
-	override void request(HTTPServerRequest req, HTTPServerResponse res, string[string] parameters = null) {
-    parameters["vueApp"] = VUEInstance("app").toString;
-    // parameters["jsStart"] = UIMIconbarHorizontal.toVUEComponent.globalRegistration;
+	override void request(StringAA reqParameters, HTTPServerResponse res) {
+    	reqParameters["vueApp"] = VUEInstance("app").toString;
+    	// parameters["jsStart"] = UIMIconbarHorizontal.toVUEComponent.globalRegistration;
 
-		super.request(req, res);
+		super.request(reqParameters, res);
   }
 }
 auto VUEPage() { return new DVUEPage; }
@@ -43,7 +40,6 @@ auto VUEPage(string aName) { return new DVUEPage(aName); }
 auto VUEPage(DVUEApp anApp) { return new DVUEPage(anApp); }
 auto VUEPage(DVUEApp anApp, string aName) { return new DVUEPage(anApp, aName); }
 
-///
 unittest {
 }
 

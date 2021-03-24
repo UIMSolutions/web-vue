@@ -2,16 +2,21 @@
 
 import uim.vue;
 
+@safe:
+
+@safe:
+/** A Vue instance is essentially a ViewModel as defined in the MVVM pattern, 
+* hence the variable name vm you will see throughout the docs. 
+* When you instantiate a Vue instance, you need to pass in an options object which can contain options for data, template, 
+* element to mount on, methods, lifecycle callbacks and more.
+**/
 class DVUEInstance : DVUEObj {
 	this() { super(); }
 	this(string aName) { super(aName); }
 
-	mixin(TProperty!("string", "variable"));
+	mixin(TProperty!("string", "linkTo"));
 	unittest {
-		assert(VUEInstance == "new Vue();");
-		assert(VUEInstance.variable("test").variable == "test");
-		assert(VUEInstance("xyz") == "new Vue({el:'#xyz'});");
-		assert(VUEInstance("xyz").variable("test") == "var test=new Vue({el:'#xyz'});");
+		//
 	}
 
 	/// A hash of components to be made available to the Vue instance.
@@ -67,7 +72,7 @@ class DVUEInstance : DVUEObj {
 	override string[string] settings() {
 		string[string] results = super.settings;
 
-		if (_name) results["el"] = "'#"~_name~"'";
+		if (_linkTo) results["el"] = "'#"~_linkTo~"'";
 		if (_data) results["data"] = _data.toJS(true);
 		if (_components) results["components"] = _components.toJS;
 		if (_filters) results["filters"] = _filters.toJS;
@@ -86,7 +91,7 @@ class DVUEInstance : DVUEObj {
 	/// Export to string
 	override string toString() {
 		string result;
-		if (_variable) result ~= "var "~variable~"=";
+		if (_name) result ~= "var "~_name~"=";
 		result ~= "new Vue("~(settings ? settings.toJS(true) : "")~");";
 		return result;
 	}
@@ -95,7 +100,7 @@ auto VUEInstance() { return new DVUEInstance(); }
 auto VUEInstance(string aName) { return new DVUEInstance(aName); }
 
 unittest {
-	assert(VUEInstance == "new Vue();");
+/* 	assert(VUEInstance == "new Vue();");
 	assert(VUEInstance("app") == "new Vue({el:'#app'});");
 	assert(VUEInstance.name("app") == "new Vue({el:'#app'});");
 	assert(VUEInstance.variable("vue").name("app") == "var vue=new Vue({el:'#app'});");
@@ -124,4 +129,9 @@ unittest {
 	"Wrong? -> "~VUEInstance.watch("a","return value;").watch("x","return value;").toString);
 	assert(VUEInstance.watch(["a":"return value;", "x":"return value;"]) == "new Vue({watch:{a:function(value){return value;},x:function(value){return value;}}});", 
 	"Wrong? -> "~VUEInstance.watch(["a":"return value;", "x":"return value;"]).toString);
+ */
+	assert(VUEInstance() == "new Vue();");
+	assert(VUEInstance("vm") == "var vm=new Vue();");
+	assert(VUEInstance().linkTo("abc") == "new Vue({el:'#abc'});");
+	assert(VUEInstance("vm").linkTo("abc") == "var vm=new Vue({el:'#abc'});");
 }

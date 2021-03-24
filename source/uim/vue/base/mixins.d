@@ -2,6 +2,8 @@
 
 import uim.vue;
 
+@safe:
+
 class DVUEMixin : DVUEObj {
 	this() { super(); }
 	this(DVUEApp anApp) { this(); _app = anApp; }

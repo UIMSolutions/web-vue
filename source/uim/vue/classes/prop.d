@@ -1,6 +1,8 @@
-﻿module uim.vue.prop;
+﻿module uim.vue.classes.prop;
 
 import uim.vue;
+
+@safe:
 
 class DVUEProp {
 	this() { }
@@ -15,6 +17,20 @@ class DVUEProp {
 	mixin(TProperty!("string", "defaultValue"));
 	mixin(TProperty!("bool", "required"));
 	mixin(TProperty!("string", "validator"));
+
+	override string toString() {
+		string[string] results;
+
+		if (types) {
+			if (types.length == 1) results["type"] = types[0];
+			else results["type"] = "[%s]".format(types.join(","));
+		}
+		if (required) results["required"] = "true";
+		if (defaultValue.length>0) results["default"] = defaultValue;
+		if (validator.length>0) results["validator"] = validator;
+
+		return name~":"~results.toJS;
+	}
 }
 auto VUEProp() { return new DVUEProp(); }
 auto VUEProp(string aName) { return new DVUEProp(aName); }

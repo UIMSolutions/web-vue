@@ -2,6 +2,8 @@ module uim.vue.global;
 
 import uim.vue;
 
+@safe:
+
 /**
 * vueDirective - Global register of custom directives
 * name: Name of directive, use as v-<name> (test should be used as v-test )
