@@ -2,6 +2,8 @@ module uim.vue.html.transition;
 
 import uim.html;
 
+@safe:
+
 class DH5Transition : DH5Obj {
 	mixin(H5This!"transition");
 }

@@ -228,6 +228,7 @@ class DVUEComponent : DVUEObj {
 		return result;
 	}
 	unittest {
+		writeln(VUEComponent.toVue3("test"));
 		assert(VUEComponent.toVue3("test") == "test.component('my-component-name', {`~settings.toJS(true)~`})`");
 	}
 

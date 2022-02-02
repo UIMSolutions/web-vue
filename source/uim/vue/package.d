@@ -1,5 +1,7 @@
 ﻿module uim.vue;
 
+@safe:
+
 // Standard Libraries
 public import std.stdio;
 public import std.string;
@@ -11,6 +13,7 @@ public import vibe.vibe;
 public import uim.core;
 public import uim.oop;
 public import uim.html;
+
 public import uim.javascript;
 // public import uim.json;
 
@@ -125,7 +128,7 @@ T vElse(T:DH5Obj)(T h5) { return h5.attribute("v-else", "v-else"); }
 T vClass(T:DH5Obj)(T h5, string[] values) { return h5.attribute(":class", "["~values.join(",")~"]"); }
 T vClass(T:DH5Obj)(T h5, string[string] values, bool sort = true) {
 	string[] inner;
-	if (sort) foreach(k; values.keys.sort) {
+	if (sort) foreach(k; values.byKey().array.sort!("a < b")) {
 		if (k.indexOf("-") == -1) inner~="%s:%s".format(k, values[k]);
 		else inner~="'%s':%s".format(k, values[k]);
 	}

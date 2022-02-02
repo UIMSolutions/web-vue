@@ -2,6 +2,8 @@ module uim.vue.html.slot;
 
 import uim.html;
 
+@safe:
+
 class DH5Slot : DH5Obj {
 	mixin(H5This!"slot");
 }

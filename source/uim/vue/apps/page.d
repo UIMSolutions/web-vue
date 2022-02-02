@@ -28,11 +28,11 @@ class DVUEPage : DH5AppPage {
 		/// TODO
 	}
 
-	override void request(StringAA reqParameters, HTTPServerResponse res) {
+	override void request(HTTPServerRequest req, HTTPServerResponse res, STRINGAA reqParameters) {
     	reqParameters["vueApp"] = VUEInstance("app").toString;
     	// parameters["jsStart"] = UIMIconbarHorizontal.toVUEComponent.globalRegistration;
 
-		super.request(reqParameters, res);
+		super.request(req, res, reqParameters);
   }
 }
 auto VUEPage() { return new DVUEPage; }
