@@ -1,6 +1,6 @@
 ﻿module uim.vue;
 
-@safe:
+	@safe:
 
 // Standard Libraries
 public import std.stdio;
