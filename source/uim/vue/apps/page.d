@@ -3,7 +3,7 @@
 import uim.vue;
 
 @safe:
-
+/* 
 class DVUEPage : DH5AppPage {
 	this() { super(); }
 	this(DVUEApp anApp) { this().app(anApp); }
@@ -16,7 +16,7 @@ class DVUEPage : DH5AppPage {
 		assert(VUEPage.instances(["test": VUEInstance("test"), "test2": VUEInstance("test2")]).instances().length == 2);
 /* 		assert(VUEPage.instances([VUEInstance.name("test"), VUEInstance.name("test2")]).instances("test")[0].name == "test");
 		assert(VUEPage.instances(VUEInstance.name("test")).instances(VUEInstance.name("test2")).instances("test")[0].name == "test");
- */	}
+ * /	}
 
 	mixin(XPropertyAA!("string", "DVuex", "stores"));
 	unittest {
@@ -39,7 +39,7 @@ auto VUEPage() { return new DVUEPage; }
 auto VUEPage(string aName) { return new DVUEPage(aName); }
 auto VUEPage(DVUEApp anApp) { return new DVUEPage(anApp); }
 auto VUEPage(DVUEApp anApp, string aName) { return new DVUEPage(anApp, aName); }
-
+ */
 unittest {
 }
 
